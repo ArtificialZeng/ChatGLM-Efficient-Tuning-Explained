@@ -1,3 +1,6 @@
+
+# 彩色版：ChatGLM Efficient Tuning源码解析train_sft.py   https://zengxiaojian.blog.csdn.net/article/details/131458667
+
 # coding=utf-8
 # Implements several parameter-efficient supervised fine-tuning method for ChatGLM.
 # This code is inspired by https://github.com/THUDM/ChatGLM-6B/blob/main/ptuning/main.py
