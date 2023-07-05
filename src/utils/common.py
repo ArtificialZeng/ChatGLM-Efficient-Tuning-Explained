@@ -14,13 +14,13 @@ from transformers import (
     Seq2SeqTrainingArguments,
     BitsAndBytesConfig
 )
-from transformers.utils import check_min_version
-from transformers.utils.versions import require_version
+from transformers.utils import check_min_version  #从 transformers 库导入 check_min_version 函数，用于检查 transformers 库的版本是否满足最低要求。
+from transformers.utils.versions import require_version #从 transformers 库导入 require_version 函数，用于检查特定库的版本是否满足要求。
 from transformers.modeling_utils import PreTrainedModel
 from transformers.tokenization_utils import PreTrainedTokenizer
 
-import datasets
-from datasets import Dataset, concatenate_datasets, load_dataset
+import datasets  #导入 datasets 库，该库包含大量的公开数据集和评估度量。
+from datasets import Dataset, concatenate_datasets, load_dataset #从 datasets 库导入 Dataset 类、concatenate_datasets 函数和 load_dataset 函数。这些都用于处理数据集。
 
 from peft import (
     PeftModel,
@@ -29,18 +29,18 @@ from peft import (
     get_peft_model
 )
 
-from peft.utils import CONFIG_NAME, WEIGHTS_NAME
+from peft.utils import CONFIG_NAME, WEIGHTS_NAME  #从 peft 库的 utils 模块导入 CONFIG_NAME 和 WEIGHTS_NAME，这两个常量可能是用来指定模型配置和权重的文件名。
 
-from trl import AutoModelForCausalLMWithValueHead
+from trl import AutoModelForCausalLMWithValueHead  #从 trl 库导入 AutoModelForCausalLMWithValueHead 类，用于生成一个带有值头的因果语言模型，这可能是进行强化学习训练的模型。
 
-from .config import (
+from .config import (  #从本地的 config 模块导入四个类，这些类定义了模型、训练、微调和生成等过程中的参数。
     ModelArguments,
     DataTrainingArguments,
     FinetuningArguments,
     GeneratingArguments
 )
 
-from .other import (
+from .other import (  #从本地的 other 模块导入多个函数和常量，这些函数和常量用于日志记录、加载参数、打印参数、准备训练模型等。
     get_logger,
     load_trainable_params,
     load_valuehead_params,
