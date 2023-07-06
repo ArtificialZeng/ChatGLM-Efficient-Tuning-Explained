@@ -4,12 +4,12 @@ ChatGLM-Efficient-Tuning-相关代码，逐行详解版。
 
 # ChatGLM-Efficient-Tuning-Explained
 
-* [src/](./ChatGLM-Efficient-Tuning-Explained/src)
-  * [utils/](./ChatGLM-Efficient-Tuning-Explained/src/utils)
-    * [common.py](./ChatGLM-Efficient-Tuning-Explained/src/utils/common.py)
-    * [peft_trainer.py](./ChatGLM-Efficient-Tuning-Explained/src/utils/peft_trainer.py)
-  * [train_sft.py](./ChatGLM-Efficient-Tuning-Explained/src/train_sft.py)
-* [README.md](./ChatGLM-Efficient-Tuning-Explained/README.md)
+* [src/](./src)
+  * [utils/](./src/utils)
+    * [common.py](./src/utils/common.py)
+    * [peft_trainer.py](./src/utils/peft_trainer.py)
+  * [train_sft.py](./src/train_sft.py)
+* [README.md](./README.md)
 
 
 # CSDN彩色博客版：
