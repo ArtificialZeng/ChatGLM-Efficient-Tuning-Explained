@@ -4,7 +4,7 @@ ChatGLM-Efficient-Tuning-相关代码，逐行详解版。
 
 # ChatGLM-Efficient-Tuning-Explained
 
-* [.vscode/](./ChatGLM-Efficient-Tuning-Explained/.vscode)
+* [./ChatGLM-Efficient-Tuning-Explained/](./ChatGLM-Efficient-Tuning-Explained/)
 * [src/](./ChatGLM-Efficient-Tuning-Explained/src)
   * [utils/](./ChatGLM-Efficient-Tuning-Explained/src/utils)
     * [common.py](./ChatGLM-Efficient-Tuning-Explained/src/utils/common.py)
