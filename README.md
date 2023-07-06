@@ -10,6 +10,7 @@ ChatGLM-Efficient-Tuning-相关代码，逐行详解版。
     * [peft_trainer.py](./src/utils/peft_trainer.py)
   * [train_sft.py](./src/train_sft.py)
 * [examples/](./examples)
+  * [ads_generation.md](./examples/ads_generation.md)
 * [README.md](./README.md)
 
 
