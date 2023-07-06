@@ -9,6 +9,7 @@ ChatGLM-Efficient-Tuning-相关代码，逐行详解版。
     * [common.py](./src/utils/common.py)
     * [peft_trainer.py](./src/utils/peft_trainer.py)
   * [train_sft.py](./src/train_sft.py)
+* [examples/](./examples)
 * [README.md](./README.md)
 
 
