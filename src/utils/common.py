@@ -59,7 +59,7 @@ require_version("trl>=0.4.4", "To fix: pip install trl>=0.4.4")
 logger = get_logger(__name__)
 
 
-def init_adapter(
+def init_adapter(  #定义函数 init_adapter，输入是模型、模型参数、微调参数和一个布尔值，输出是微调后的模型。
         model: PreTrainedModel,
         model_args: ModelArguments,
         finetuning_args: FinetuningArguments,
@@ -73,7 +73,7 @@ def init_adapter(
     Note that the trainable parameters must be cast to float32.
     """
 
-    if finetuning_args.finetuning_type == "none" and is_trainable:
+    if finetuning_args.finetuning_type == "none" and is_trainable:  #判断微调的类型，并根据微调的类型进行不同的处理。例如，如果微调类型为 "full"，则将模型的所有参数转换为 float 类型；如果微调类型为 "freeze"，则冻结一些层的参数；如果微调类型为 "p_tuning" 或 "lora"，则通过特定的方式加载参数等。
         raise ValueError("You cannot use finetuning_type=none while training.")
 
     if finetuning_args.finetuning_type == "full":
@@ -95,14 +95,15 @@ def init_adapter(
     if finetuning_args.finetuning_type == "p_tuning":
         logger.info("Fine-tuning method: P-Tuning v2")
 
-        if model_args.checkpoint_dir is not None:
+        if model_args.checkpoint_dir is not None:  #检查并加载模型检查点。
+
             assert load_trainable_params(model, model_args.checkpoint_dir[0]), "Model checkpoint is not correctly loaded."
 
-    if finetuning_args.finetuning_type == "lora":
-        logger.info("Fine-tuning method: LoRA")
+    if finetuning_args.finetuning_type == "lora":  #判断微调的类型，并根据微调的类型进行不同的处理。例如，如果微调类型为 "full"，则将模型的所有参数转换为 float 类型；如果微调类型为 "freeze"，则冻结一些层的参数；如果微调类型为 "p_tuning" 或 "lora"，则通过特定的方式加载参数等。
+        logger.info("Fine-tuning method: LoRA")  #如果微调类型为 "lora"，则进一步创建或加载 LoRA 权重。
         lastest_checkpoint = None
 
-        if model_args.checkpoint_dir is not None:
+        if model_args.checkpoint_dir is not None:  #最后，如果存在模型检查点，那么在日志中记录已加载的模型检查点信息，并返回微调后的模型。
             assert os.path.exists(os.path.join(model_args.checkpoint_dir[0], WEIGHTS_NAME)), \
                 "Provided path ({}) does not contain a LoRA weight.".format(model_args.checkpoint_dir[0])
             assert os.path.exists(os.path.join(model_args.checkpoint_dir[0], CONFIG_NAME)), \
