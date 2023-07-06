@@ -10,6 +10,9 @@
 nvidia-smi topo -m
 ```
 注：如果显卡连接不支NVLinks，则不推荐用accelerate训练，推荐用Pytorch自带的torchrun或torch.distributed命令
+```bash
+torchrun --nnodes=1 --nproc_per_node=2 src/train_sft.py ...
+```
 ![1.jpg](media/ads_generation_1.jpg)
 
 为了进行分布式训练，运行以下命令配置分布式训练环境。
