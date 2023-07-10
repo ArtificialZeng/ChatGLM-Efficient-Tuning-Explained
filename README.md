@@ -2,7 +2,6 @@
 
 ChatGLM-Efficient-Tuning-相关代码，逐行详解版。
 
-# ChatGLM-Efficient-Tuning-Explained
 
 * [src/](./src)
   * [utils/](./src/utils)
