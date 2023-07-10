@@ -1,19 +1,19 @@
 import torch
 
-from typing import Dict, Optional, Sequence, Union
+from typing import Dict, Optional, Sequence, Union  #导入Python的类型提示模块，这些类型会在函数定义中用来说明参数和返回值的类型。
 
-from transformers import DataCollatorWithPadding, BatchEncoding
-from transformers.modeling_utils import PreTrainedModel
-from transformers.tokenization_utils import PreTrainedTokenizer
+from transformers import DataCollatorWithPadding, BatchEncoding  #从transformers库中导入DataCollatorWithPadding和BatchEncoding。#DataCollatorWithPadding是一个数据整理器，用于将一批样本组合在一起并进行填充以形成一个统一的批量；BatchEncoding是一个类，用于保存由tokenizer返回的编码结果。
+from transformers.modeling_utils import PreTrainedModel   #从transformers库中导入PreTrainedModel，表示预训练的模型。
+from transformers.tokenization_utils import PreTrainedTokenizer  #从transformers库中导入PreTrainedTokenizer，表示预训练的分词器。
 
-from .other import IGNORE_INDEX
+from .other import IGNORE_INDEX  ##从同级目录下的other模块中导入IGNORE_INDEX，它是一个特殊的索引值，用于在损失计算时忽略某些特定的标记。
 
-
+#新的类DataCollatorForChatGLM，它继承自DataCollatorWithPadding，这意味着它拥有DataCollatorWithPadding的所有方法和属性，并可以添加或修改某些方法和属性。
 class DataCollatorForChatGLM(DataCollatorWithPadding):
     r"""
     Data collator for ChatGLM. It is capable of dynamically padding for batched data.
     """
-    def __init__(
+    def __init__( #类的构造函数，它在类的实例化时被调用。构造函数接收预训练的分词器，模型，和两个可选参数ignore_pad_token_for_loss和use_v2。
             self,
             tokenizer: PreTrainedTokenizer,
             model: PreTrainedModel,
