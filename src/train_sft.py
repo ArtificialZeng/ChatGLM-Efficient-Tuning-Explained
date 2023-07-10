@@ -7,15 +7,15 @@
 
 
 from utils import (
-    DataCollatorForChatGLM,
-    Seq2SeqTrainerForChatGLM,
-    ComputeMetrics,
-    LogCallback,
-    load_pretrained,
-    prepare_args,
+    DataCollatorForChatGLM,  #用于处理聊天模型ChatGLM的数据整理器。在模型训练和评估的过程中，数据整理器的作用是将多个数据样本整理成一个批量（batch），并准备好模型可以接受的输入。
+    Seq2SeqTrainerForChatGLM,  #专门用于聊天模型ChatGLM的训练器，它在原始的Seq2SeqTrainer的基础上可能进行了一些针对ChatGLM模型的定制。
+    ComputeMetrics,  #计算指标的工具。在模型训练和评估过程中，我们需要监控一些指标以了解模型的性能，如准确率，召回率，F1值等。
+    LogCallback,  #一个回调函数，它用于在模型训练过程中的某些特定时间点执行特定任务，例如记录日志。
+    load_pretrained,  #用于加载预训练的模型。在许多深度学习任务中，我们通常会先从一个预训练模型开始，然后对它进行微调，以适应特定的任务。
+    prepare_args,  #用于准备训练参数。
     prepare_data,
-    preprocess_data,
-    get_logits_processor,
+    preprocess_data,  #用于对训练数据进行预处理，例如清洗、规范化、分词、编码等。
+    get_logits_processor,  #返回一个对模型输出logits进行处理的处理器，例如温度缩放，顶部k采样，顶部p采样等。
     plot_loss
 )
 
