@@ -47,16 +47,16 @@ def main():
   
     #接下来的 if 代码块会根据 training_args.do_train 决定是否分割数据集，以及如何分割。如果进行训练，那么会根据设定的比例分割训练和验证数据集。如果只进行评估或预测，那么全集将作为评估数据集。
     # Split the dataset
-    if training_args.do_train:
-        if data_args.dev_ratio > 1e-6:
-            dataset = dataset.train_test_split(test_size=data_args.dev_ratio)
-            trainer_kwargs = {"train_dataset": dataset["train"], "eval_dataset": dataset["test"]}
+    if training_args.do_train:  #检查是否在训练参数中设置了进行训练。
+        if data_args.dev_ratio > 1e-6:  #如果设置了训练，接下来检查开发集（也称为验证集）的比例是否大于1e-6，以决定是否要划分开发集。
+            dataset = dataset.train_test_split(test_size=data_args.dev_ratio) #如果开发集比例大于1e-6，就用这个比例来划分训练集和开发集。
+            trainer_kwargs = {"train_dataset": dataset["train"], "eval_dataset": dataset["test"]}  #创建一个字典，其中包含了训练集和开发集，这些数据将作为训练器的参数。
         else:
-            trainer_kwargs = {"train_dataset": dataset}
+            trainer_kwargs = {"train_dataset": dataset}  #如果开发集比例不大于1e-6，则不划分开发集，只用全部数据作为训练集。
     else: # do_eval or do_predict
-        trainer_kwargs = {"eval_dataset": dataset}
+        trainer_kwargs = {"eval_dataset": dataset}  #如果没有设置进行训练，那么就设置评估数据集为全部数据。
 
-    # Initialize our Trainer
+    # Initialize our Trainer 创建一个Seq2SeqTrainerForChatGLM对象，用于训练ChatGLM模型。这个对象接受一系列参数，包括微调参数，模型，训练参数，分词器，数据整理器，回调函数，计算指标的工具，以及前面定义的包含数据集的字典。
     trainer = Seq2SeqTrainerForChatGLM(  #通过上述的参数来创建一个 Seq2SeqTrainer。
         finetuning_args=finetuning_args,
         model=model,
@@ -69,7 +69,7 @@ def main():
     )
 
     # Keyword arguments for `model.generate`
-    gen_kwargs = {
+    gen_kwargs = {  #定义了一个字典，包含了调用模型生成方法时的关键字参数，包括：是否采样（do_sample），采样的阈值（top_p），最大新生成的标记数量（max_new_tokens），温度参数（temperature）以及logits处理器（logits_processor）。这些参数将影响模型生成文本的方式和质量。
         "do_sample": True,
         "top_p": 0.7,
         "max_new_tokens": data_args.max_target_length + 1,
