@@ -5,7 +5,10 @@ ChatGLM-Efficient-Tuning-相关代码，逐行详解版。
 
 * [src/](./src)
   * [utils/](./src/utils)
-    * [common.py（init_adapter（）、load_pretrained()、prepare_args()](./src/utils/common.py)
+    * [common.py](./src/utils/common.py)
+      * init_adapter（）
+      * load_pretrained()
+      * prepare_args()
     * [peft_trainer.py  （定义LogCallback、PeftTrainer）](./src/utils/peft_trainer.py)
     * [data_collator.py（DataCollatorForChatGLM类）](./src/utils/data_collator.py)
     * [seq2seq.py  （ComputeMetrics、Seq2SeqTrainerForChatGLM)](./src/utils/seq2seq.py)
