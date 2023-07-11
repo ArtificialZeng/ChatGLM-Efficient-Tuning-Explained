@@ -66,12 +66,13 @@ class ComputeMetrics:
         return {k: float(np.mean(v)) for k, v in score_dict.items()}  #返回每个评价指标的平均得分。
 
 
-class Seq2SeqTrainerForChatGLM(PeftTrainer):
+class Seq2SeqTrainerForChatGLM(PeftTrainer): #定义一个名为Seq2SeqTrainerForChatGLM的类，这个类继承自PeftTrainer类。
+
     r"""
     Inherits PeftTrainer to compute generative metrics such as BLEU and ROUGE.
     """
 
-    def prediction_step(
+    def prediction_step( #定义一个名为prediction_step的方法，这个方法接收四个参数：一个模型，一个输入字典，一个布尔值用于决定是否只计算损失，以及一个可选的字符串列表用于忽略某些键。
         self,
         model: nn.Module,
         inputs: Dict[str, Union[torch.Tensor, Any]],
@@ -83,14 +84,15 @@ class Seq2SeqTrainerForChatGLM(PeftTrainer):
 
         Subclass and override to inject custom behavior.
         """
-        input_ids = inputs["input_ids"]
-        loss, generated_tokens, labels = super().prediction_step(
+        input_ids = inputs["input_ids"] #从输入中提取输入id。
+        loss, generated_tokens, labels = super().prediction_step(  #调用父类的prediction_step方法，计算损失，生成tokens，并获取标签。
             model, inputs, prediction_loss_only=prediction_loss_only, ignore_keys=ignore_keys
         )
+        #如果generated_tokens不为None，那么取其第二维度的从input_ids.size(-1)开始之后的部分。
         generated_tokens = generated_tokens[:, input_ids.size(-1):] if generated_tokens is not None else None
-        return (loss, generated_tokens, labels)
-
-    def save_predictions(
+        return (loss, generated_tokens, labels)  #返回损失，生成的tokens，和标签。
+    
+    def save_predictions(  #定义一个名为save_predictions的方法，这个方法接收一个预测结果并且不返回任何值。
             self,
             predict_results: PredictionOutput
     ) -> None:
@@ -99,20 +101,22 @@ class Seq2SeqTrainerForChatGLM(PeftTrainer):
 
         A custom behavior that not contained in Seq2SeqTrainer.
         """
-        if not self.is_world_process_zero():
+        if not self.is_world_process_zero(): #如果当前的进程不是主进程，直接返回。
             return
 
-        output_prediction_file = os.path.join(self.args.output_dir, "generated_predictions.jsonl")
-        logger.info(f"Saving prediction results to {output_prediction_file}")
-
+        output_prediction_file = os.path.join(self.args.output_dir, "generated_predictions.jsonl") #定义预测结果的保存路径。
+        logger.info(f"Saving prediction results to {output_prediction_file}")  #打印日志，告诉用户预测结果将被保存到何处。
+        
+        #如果预测或者标签中的某个token不是忽略索引，则保持原样，否则替换为填充token的id。
         preds = np.where(predict_results.predictions != IGNORE_INDEX, predict_results.predictions, self.tokenizer.pad_token_id)
         labels = np.where(predict_results.label_ids != IGNORE_INDEX, predict_results.label_ids, self.tokenizer.pad_token_id)
 
+        #使用tokenizer的batch_decode方法将预测和标签的token id解码为原始文本。
         decoded_preds = self.tokenizer.batch_decode(preds, skip_special_tokens=True, clean_up_tokenization_spaces=True)
         decoded_labels = self.tokenizer.batch_decode(labels, skip_special_tokens=True, clean_up_tokenization_spaces=True)
 
-        with open(output_prediction_file, "w", encoding="utf-8") as writer:
-            res: List[str] = []
-            for pred, label in zip(decoded_preds, decoded_labels):
-                res.append(json.dumps({"label": label, "predict": pred}, ensure_ascii=False))
-            writer.write("\n".join(res))
+        with open(output_prediction_file, "w", encoding="utf-8") as writer: #打开预测文件，准备写入预测结果。
+            res: List[str] = [] #定义一个空列表，用于保存预测结果。
+            for pred, label in zip(decoded_preds, decoded_labels):  #遍历预测值和标签。
+                res.append(json.dumps({"label": label, "predict": pred}, ensure_ascii=False))  #将标签和预测值以字典的形式转化为json字符串，然后添加到res列表中。
+            writer.write("\n".join(res))  #将res列表中的所有元素用换行符连接起来，然后写入到预测文件中。
