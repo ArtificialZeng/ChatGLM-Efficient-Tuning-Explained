@@ -11,7 +11,7 @@ ChatGLM-Efficient-Tuning-相关代码，逐行详解版。
     * [seq2seq.py  （ComputeMetrics、Seq2SeqTrainerForChatGLM)](./src/utils/seq2seq.py)
   * [train_sft.py(DataCollatorForChatGLM、Seq2SeqTrainerForChatGLM)](./src/train_sft.py)
 * [examples/](./examples)
-  * [ads_generation.md](./examples/ads_generation.md)
+  * [ads_generation.md（分布式运行范例）](./examples/ads_generation.md)
 * [README.md](./README.md)
 
 
