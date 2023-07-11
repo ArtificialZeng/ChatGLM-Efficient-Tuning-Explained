@@ -58,7 +58,7 @@ class LogCallback(TrainerCallback):
         avg_time_per_step = elapsed_time / cur_steps if cur_steps != 0 else 0  #计算每步的平均时间，如果当前步数为0，则平均时间也为0。
         remaining_steps = state.max_steps - cur_steps
         remaining_time = remaining_steps * avg_time_per_step
-        log_dict = {
+        log_dict = {  #创建一个字典，记录各种需要的信息，包括当前步数、总步数、损失、奖励、学习率、当前周期数、训练完成的百分比、已经过的时间以及预计剩余的时间。
             "current_steps": cur_steps,
             "total_steps": state.max_steps,
             "loss": state.log_history[-1].get("loss", None),
@@ -69,9 +69,9 @@ class LogCallback(TrainerCallback):
             "elapsed_time": str(timedelta(seconds=int(elapsed_time))),
             "remaining_time": str(timedelta(seconds=int(remaining_time)))
         }
-        os.makedirs(args.output_dir, exist_ok=True)
-        with open(os.path.join(args.output_dir, "trainer_log.jsonl"), "a") as f:
-            f.write(json.dumps(log_dict) + "\n")
+        os.makedirs(args.output_dir, exist_ok=True)  #创建输出目录，如果目录已经存在，那么不会报错。
+        with open(os.path.join(args.output_dir, "trainer_log.jsonl"), "a") as f:  #以追加模式打开一个名为"trainer_log.jsonl"的文件。
+            f.write(json.dumps(log_dict) + "\n")  #将log_dict转换为json字符串，并写入文件。
 
 
 class PeftTrainer(Seq2SeqTrainer):  #定义了一个新的类PeftTrainer，它继承了Seq2SeqTrainer类。
