@@ -8,7 +8,7 @@ import torch
 from typing import Dict, Optional
 from datetime import timedelta
 
-from transformers import (
+from transformers import (  
     Seq2SeqTrainer,
     TrainerCallback,
     TrainerControl,
@@ -43,19 +43,19 @@ class LogCallback(TrainerCallback):
     purposes.
     """
 
-    def __init__(self):
+    def __init__(self):  #定义了LogCallback的构造函数。
         self.start_time = time.time() #在LogCallback的构造函数中，我们记录了该实例创建的时间，作为训练的开始时间。
-
+    #定义了一个on_log的函数，这个函数在每个训练日志事件之后被调用。
     def on_log(self, args: TrainingArguments, state: TrainerState, control: TrainerControl, **kwargs) -> None: #这是一个在每次日志记录后被调用的函数，它包含了训练参数、训练状态和训练控制等信息。
         r"""                                                                                                  #然后根据这些信息进行一些操作，比如计算训练进度、剩余时间等，并将这些信息存储在日志文件中。
         Event called after logging the last logs.
         """
-        if "loss" not in state.log_history[-1]:
+        if "loss" not in state.log_history[-1]:  #如果最新的日志记录中没有"loss"字段，则直接返回，不执行后续操作。
             return
-        cur_time = time.time()
-        cur_steps = state.log_history[-1].get("step")
-        elapsed_time = cur_time - self.start_time
-        avg_time_per_step = elapsed_time / cur_steps if cur_steps != 0 else 0
+        cur_time = time.time()  #获取当前的时间。
+        cur_steps = state.log_history[-1].get("step")  #从最新的日志记录中获取当前步数。
+        elapsed_time = cur_time - self.start_time  #计算从开始到现在经过的时间。
+        avg_time_per_step = elapsed_time / cur_steps if cur_steps != 0 else 0  #计算每步的平均时间，如果当前步数为0，则平均时间也为0。
         remaining_steps = state.max_steps - cur_steps
         remaining_time = remaining_steps * avg_time_per_step
         log_dict = {
