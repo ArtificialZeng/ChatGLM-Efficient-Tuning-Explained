@@ -296,47 +296,69 @@ def load_pretrained(
 def prepare_args(
         stage: Literal["sft", "rm", "ppo"]
 ) -> Tuple[ModelArguments, DataTrainingArguments, Seq2SeqTrainingArguments, FinetuningArguments]:
+    # 定义名为prepare_args的函数，接受一个名为stage的参数，并返回一个由四个对象组成的元组
 
     parser = HfArgumentParser((ModelArguments, DataTrainingArguments, Seq2SeqTrainingArguments, FinetuningArguments))
+    # 创建一个HfArgumentParser对象，用于解析命令行参数
 
-    if len(sys.argv) == 2 and sys.argv[1].endswith(".json"): # Provide arguments with a json file.
+    if len(sys.argv) == 2 and sys.argv[1].endswith(".json"):
+        # 如果命令行参数数量为2，并且第二个参数以".json"结尾
         model_args, data_args, training_args, finetuning_args = parser.parse_json_file(json_file=os.path.abspath(sys.argv[1]))
+        # 解析第二个命令行参数指定的JSON文件中的参数
     else:
         model_args, data_args, training_args, finetuning_args = parser.parse_args_into_dataclasses()
+        # 直接解析命令行参数
 
-    # Setup logging
     if training_args.should_log:
-        # The default of training_args.log_level is passive, so we set log level at info here to have that default.
+        # 如果training_args.should_log为True
         transformers.utils.logging.set_verbosity_info()
+        # 设置Transformers库的日志级别为info
 
     log_level = training_args.get_process_log_level()
     datasets.utils.logging.set_verbosity(log_level)
     transformers.utils.logging.set_verbosity(log_level)
     transformers.utils.logging.enable_default_handler()
     transformers.utils.logging.enable_explicit_format()
+    # 设置数据集和Transformers库的日志级别，并启用默认的日志处理程序和显式格式
 
-    # Check arguments (do not check finetuning_args since it may be loaded from checkpoints)
     assert stage == "sft" or (not training_args.predict_with_generate), \
         "`predict_with_generate` cannot be set as True at PT, RM and PPO stages."
+    # 检查stage的值是否为"sft"，或者当training_args.predict_with_generate为False时
 
     assert not (training_args.do_train and training_args.predict_with_generate), \
         "`predict_with_generate` cannot be set as True while training."
+    # 检查training_args.do_train和training_args.predict_with_generate是否都为False
 
     assert (not training_args.do_predict) or training_args.predict_with_generate, \
         "Please enable `predict_with_generate` to save model predictions."
+    # 检查training_args.do_predict是否为False或training_args.predict_with_generate是否为True
+
+    assert not (finetuning_args.finetuning_type == "p_tuning" and training_args.fp16), \
+        "Please disable fp16 training while using the P-Tuning v2 method."
+    # 检查finetuning_args.finetuning_type是否不为"p_tuning"或training_args.fp16是否为False
 
     if model_args.quantization_bit is not None:
         assert finetuning_args.finetuning_type != "full" and finetuning_args.finetuning_type != "freeze", \
             "Quantization is incompatible with the full-parameter and freeze tuning."
+        # 检查如果启用了量化，finetuning_type不能为"full"或"freeze"
+        # 使用断言（assert）检查两个条件：finetuning_args.finetuning_type不能为"full"或"freeze"
 
-        assert not (finetuning_args.finetuning_type == "p_tuning" and training_args.fp16), \
-            "FP16 training conflicts with quantized P-Tuning."
+        # 第一个条件是：finetuning_args.finetuning_type != "full"
+        # 这意味着微调类型不能是"full"，即不允许在完全微调模式下进行量化。
+
+        # 第二个条件是：finetuning_args.finetuning_type != "freeze"
+        # 这意味着微调类型不能是"freeze"，即不允许在冻结微调模式下进行量化。
+
+    # 如果断言条件为False，即微调类型为"full"或"freeze"，则会抛出一个 AssertionError 异常，其中包含"Quantization is incompatible with the full-parameter and freeze tuning."的错误消息。
 
         if not training_args.do_train:
             logger.warning("Evaluating model in 4/8-bit mode may cause lower scores.")
+            # 如果不进行训练，以4位/8位模式评估模型可能会导致较低的得分，显示警告
 
     assert model_args.checkpoint_dir is None or finetuning_args.finetuning_type == "lora" \
         or len(model_args.checkpoint_dir) == 1, "Only LoRA tuning accepts multiple checkpoints."
+    # 检查model_args.checkpoint_dir是否为None，或者当finetuning_args.finetuning_type为"lora"时，model_args.checkpoint_dir的长度是否为1
+
 
     if training_args.do_train and (not training_args.fp16):
         logger.warning("We recommend enable fp16 mixed precision training for ChatGLM-6B.")
