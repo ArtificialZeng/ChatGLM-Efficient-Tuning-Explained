@@ -1,4 +1,8 @@
 # ChatGLM-Efficient-Tuning-Explained
+注：2023.7月以后，原作者更改了目录结构。 我的这个源码解释版本是2023.7月以前的。原来的目录结构可以根据该项目的Fork日期和commit仔细查看；
+最开始 utils 在根目录， 前几天还在/src/utils ，utils文件下有common.py、init等等。 现在我都有点找不到了
+
+新的2023.7月该项目的源码解释，可以在这里看。
 
 ChatGLM-Efficient-Tuning-相关代码，逐行详解版。
 
